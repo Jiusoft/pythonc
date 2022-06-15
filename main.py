@@ -16,6 +16,7 @@ def main():
         f.write("\n\" $@")
 
     os.system(f"shc -f {filename}.tmpbash")
+    os.remove(f"{filename}.tmpbash")
     os.remove(f"{filename}.tmpbash.x.c")
     os.rename(f"{filename}.tmpbash.x", f"{filename}.binary")
 
