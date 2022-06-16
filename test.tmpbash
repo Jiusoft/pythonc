@@ -1,0 +1,9 @@
+#!/bin/bash
+
+python3 -c "
+import os
+__file__ = f\"{os.getcwd()}/test.py\"
+
+print(__file__)
+
+" $@
