@@ -10,7 +10,7 @@ def main():
             filename = args[0].split("/")[-1].split(".")[0]
 
         with open(f"{filename}.tmpbash", 'w') as f:
-            f.write("#!/bin/bash\n\npython3 -c \"\n")
+            f.write("#!/bin/bash\n\npython3 -c \"\nimport os\n__file__ = os.getcwd()\n\n")
             for line in code:
                 line = line.replace("\\", "\\\\").replace("\"", "\\\"")
                 f.write(f"{line}\n")
