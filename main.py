@@ -14,10 +14,10 @@ def main():
             for line in code:
                 line = line.replace("\\", "\\\\").replace("\"", "\\\"")
                 f.write(f"{line}\n")
-            f.write("\" $@")
+            f.write("\" \\$\\@")
 
         os.system(f"shc -f {filename}.tmpbash")
-        os.remove(f"{filename}.tmpbash")
+        #os.remove(f"{filename}.tmpbash")
         os.remove(f"{filename}.tmpbash.x.c")
         os.rename(f"{filename}.tmpbash.x", f"{filename}.binary")
     else:
