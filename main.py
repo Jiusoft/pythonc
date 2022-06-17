@@ -14,7 +14,7 @@ def main():
             for line in code:
                 line = line.replace("\\", "\\\\").replace("\"", "\\\"")
                 f.write(f"{line}\n")
-            f.write("\n\" $@")
+            f.write("\" $@")
 
         os.system(f"shc -f {filename}.tmpbash")
         os.remove(f"{filename}.tmpbash")
