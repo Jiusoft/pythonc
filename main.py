@@ -10,14 +10,14 @@ def main():
             filename = args[0].split("/")[-1].split(".")[0]
 
         with open(f"{filename}.tmpbash", 'w') as f:
-            f.write("#!/bin/bash\n\npython3 -c '\nimport os, sys\n__file__ = sys.argv[0] = f\"{os.getcwd()}/"+args[0].split("/")[-1]+"\"\n\n")
+            f.write("#!/bin/bash\n\nfilepath=$(realpath $0)\n\npython3 -c '\nimport os, sys\n__file__ = sys.argv[0] = '\"$filepath\"'\n\n")
             for line in code:
                 line = line.replace("'", "'\"'\"'")
                 f.write(f"{line}\n")
             f.write("' $@")
 
         os.system(f"shc -f {filename}.tmpbash")
-        os.remove(f"{filename}.tmpbash")
+        #os.remove(f"{filename}.tmpbash")
         os.remove(f"{filename}.tmpbash.x.c")
         os.rename(f"{filename}.tmpbash.x", f"{filename}.binary")
     else:
