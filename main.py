@@ -10,7 +10,7 @@ def main():
             filename = args[0].split("/")[-1].split(".")[0]
 
         with open(f"{filename}.tmpbash", 'w') as f:
-            f.write("#!/bin/bash\n\nfilepath=$(realpath $0)\n\npython3 -c '\nimport os, sys\n__file__ = sys.argv[0] = '\"$filepath\"'\n\n")
+            f.write("#!/bin/bash\n\nfilepath=$(realpath $0)\n\npython3 -c '\nimport os, sys\n__file__ = sys.argv[0] = '\"\\\"$filepath\\\"\"'\n\n")
             for line in code:
                 line = line.replace("'", "'\"'\"'")
                 f.write(f"{line}\n")
@@ -25,7 +25,8 @@ def main():
 
 
 def help():
-    print("""Usage: pythonc script-to-compile.py
+    print("""PythonC v0.0.5
+Usage: pythonc script-to-compile.py
 
 Arguments:
 -h or --help: Print Help""")
