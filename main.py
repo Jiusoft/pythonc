@@ -48,12 +48,13 @@ def main():
 
 
 def help():
-    print("""PythonC v0.0.5
+    print("""PythonC v0.1.0
 Usage: pythonc script-to-compile.py
 
 Arguments:
 -h or -H or --help: Print Help
 -l or -L or --license: View License Agreement""")
+
 
 if len(args)==0 or len(args)>1 or args[0]=="-h" or args[0]=="-H" or args[0]=="--help":
     help()
