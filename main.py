@@ -48,7 +48,7 @@ def main():
 
 
 def help():
-    print("""PythonC v0.1.0
+    print("""PythonC v0.1.1
 Usage: pythonc script-to-compile.py
 
 Arguments:
