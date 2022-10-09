@@ -1,4 +1,5 @@
 import os, sys
+from zipfile import ZipFile as zipopen
 args = sys.argv[1:]
 
 def license():
@@ -26,23 +27,17 @@ SOFTWARE.""")
 
 def main():
     if os.path.exists(args[0]):
-        code = []
-        with open(args[0]) as f:
-            for line in f:
-                code.append(line.strip("\n"))
-            filename = args[0].split("/")[-1].split(".")[0]
-
-        with open(f"{filename}.tmpbash", 'w') as f:
-            f.write("#!/bin/bash\n\nfilepath=$(realpath $0)\n\npython3 -c '\nimport os, sys\n__file__ = sys.argv[0] = '\"\\\"$filepath\\\"\"'\n\n")
-            for line in code:
-                line = line.replace("'", "'\"'\"'")
-                f.write(f"{line}\n")
-            f.write("' \"$@\"")
-
-        os.system(f"shc -f {filename}.tmpbash")
-        os.remove(f"{filename}.tmpbash")
-        os.remove(f"{filename}.tmpbash.x.c")
-        os.rename(f"{filename}.tmpbash.x", f"{filename}.binary")
+        zipfile = args[0].split("/")[-1].split('.')[0]
+        if os.path.exists(zipfile):
+            os.remove(zipfile)
+        with open(zipfile, 'a') as f:
+            f.write(f"#!/bin/sh\ncommand -v python3 >/dev/null 2>&1 || echo 'Python 3 required to run this executable.' && python3 {args[0].split('/')[-1]} \"$@\"\nexit 0\n")
+        with zipopen(zipfile, 'a') as f:
+            f.write(args[0])
+        os.system(f"shc -r -f {zipfile}")
+        os.remove(zipfile)
+        os.remove(f"{zipfile}.x.c")
+        os.rename(f"{zipfile}.x", zipfile)
     else:
         print("ERROR: File not found. ")
 
