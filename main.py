@@ -24,13 +24,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.""")
 
-def main():
+def main(output=None):
     if os.path.exists(args[0]):
-        code = []
-        with open(args[0]) as f:
-            for line in f:
-                code.append(line.strip("\n"))
-            filename = args[0].split("/")[-1].split(".")[0]
+        code = []; code.append(line.strip("\n") for line in open(args[0]))
+        filename = args[0].split("/")[-1].split(".")[0]
 
         with open(f"{filename}.tmpbash", 'w') as f:
             f.write("#!/bin/bash\n\nfilepath=$(realpath $0)\n\npython3 -c '\nimport os, sys\n__file__ = sys.argv[0] = '\"\\\"$filepath\\\"\"'\n\n")
@@ -42,7 +39,10 @@ def main():
         os.system(f"shc -f {filename}.tmpbash")
         os.remove(f"{filename}.tmpbash")
         os.remove(f"{filename}.tmpbash.x.c")
-        os.rename(f"{filename}.tmpbash.x", f"{filename}.binary")
+        if output is None:
+            os.rename(f"{filename}.tmpbash.x", f"{filename}.binary")
+        else:
+            os.rename(f"{filename}.tmpbash.x", f"{output}")
     else:
         print("ERROR: File not found. ")
 
@@ -58,9 +58,9 @@ Arguments:
 
 if len(args)==0 or args[0]=="-h" or args[0]=="-H" or args[0]=="--help":
     help()
-elif args[0]=="-l" or args[0]=="-L" or args[0]=="--license":
+elif args[0]=="-l" or args[0]=="-L" or args[0]=="--license" or args[0]=="--licence":
     license()
-elif len(args)>1:
+elif len(args)==2 and ('-h', '-H', '--help', '-l', '-L', '--license', '--licence') not in args:
     print("ERROR: Expected ONE argument. ")
 else:
     main()
