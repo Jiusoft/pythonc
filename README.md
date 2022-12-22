@@ -4,12 +4,15 @@ PythonC is a Python Compiler which converts Python Files to Executables. It uses
 
 ## Advantages
 
-- Run a Python file as ./ without python3 prefix. 
-- Smaller file than the one that PyInstaller makes. 
+- Run a Python file as ./ without python3 prefix
+- Smaller file than the one that PyInstaller makes
+- Can do everything that is included in vanilla Python
 
 ## Disadvantages
 
-- You still need Python 3 interpreter in order to run the Executable File. 
+- You still need Python 3 interpreter in order to run the Executable File
+- No requirements support, use virtual environment or requirements.txt
+- No Windows Support Yet
 
 ## To Install
 
