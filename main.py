@@ -1,5 +1,14 @@
-import os, sys
+import os, sys, atexit
 args = sys.argv[1:]
+reqfile = None
+filename = args[0].split("/")[-1].split(".")[0]
+
+def cleanup():
+    for item in os.listdir(os.getcwd()):
+        if ".tmpbash" in item and os.path.isfile(item):
+            os.remove(item)
+
+atexit.register(cleanup)
 
 def license():
     print("""MIT License
@@ -25,10 +34,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.""")
 
 def main(output=None):
+    cleanup()
     if os.path.exists(args[0]):
         print("Started Compilation...")
         code = [line.strip("\n") for line in open(args[0])]
-        filename = args[0].split("/")[-1].split(".")[0]
 
         with open(f"{filename}.tmpbash", 'w') as f:
             f.write("""#!/bin/bash
@@ -45,8 +54,15 @@ install_python() {
     fi
 }
 
-execute_python() {
-    python3 -c '__file__="'"$(pwd)/$0"'"\n""")
+execute_python() {\n""")
+            if reqfile is not None and os.path.isfile(reqfile):
+                f.write("    echo 'Downloading PIP Requirements...'\n")
+                with open(reqfile) as file:
+                    reqitems = file.read().split("\n")
+            for item in reqitems:
+                f.write(f"    python3 -m pip install {item}\n")
+            f.write("    echo 'Finished Downloading PIP Requirements.'\n")
+            f.write("    python3 -c '__file__="'"$(pwd)/$0"'"\n")
             for idx, line in enumerate(code):
                 if all(i in line for i in ('import', 'sys')):
                     if line.startswith('    '):
@@ -70,8 +86,6 @@ execute_python() {
 
 [[ "$(python3 -V)" =~ "Python 3" ]] || install_python && execute_python "$@"\n""")
         os.system(f"shc -rf {filename}.tmpbash > /dev/null 2>&1")
-        os.remove(f"{filename}.tmpbash")
-        os.remove(f"{filename}.tmpbash.x.c")
         if output is None:
             os.rename(f"{filename}.tmpbash.x", f"{filename}.binary")
         else:
@@ -90,11 +104,28 @@ Arguments:
 -l or -L or --license: View License Agreement""")
 
 
-if len(args)==0 or args[0]=="-h" or args[0]=="-H" or args[0]=="--help":
+if len(args)==0 or args[0]=="-v" or args[0]=="-V" or args[0]=="--version":
+    print("PythonC v2.0.0")
+elif len(args)==0 or args[0]=="-h" or args[0]=="-H" or args[0]=="--help":
     help()
 elif args[0]=="-l" or args[0]=="-L" or args[0]=="--license" or args[0]=="--licence":
     license()
-elif len(args)==2 and ('-h', '-H', '--help', '-l', '-L', '--license', '--licence') not in args:
+elif any(i in ("-r", "-R","--req", "--requirements") for i in args):
+    reqalready = False
+    if "-r" in args:
+        reqfile = args[args.index("-r")+1] if not reqalready else print("Too many requirement files!")
+        reqalready = True
+    elif "-R" in args:
+        reqfile = args[args.index("-R")+1] if not reqalready else print("Too many requirement files!")
+        reqalready = True
+    elif "--req" in args:
+        reqfile = args[args.index("--req")+1] if not reqalready else print("Too many requirement files!")
+        reqalready = True
+    elif "--requirements" in args:
+        reqfile = args[args.index("--requirements")+1] if not reqalready else print("Too many requirement files!")
+        reqalready = True
+    main()
+elif len(args)==2 and ('-r', '-R', '--req', '--requirements') not in args:
     print("ERROR: Expected ONE argument. ")
 else:
     main()
