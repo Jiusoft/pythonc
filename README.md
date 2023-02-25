@@ -14,10 +14,10 @@ PythonC is a Python Compiler which converts Python Files to Executables. It uses
 - No Windows Support Yet (WSL Supported)
 
 ## Roadmap
-~~Base~~<br>
-~~Fix Bugs Found~~<br>
-~~Requirements~~<br>
-Windows and macOS Support (WSL Supported)
+- [x] Base
+- [x] Fix Bugs Found
+- [x] Requirements
+- [ ] Windows and macOS Support (WSL Already Supported)
 
 ## To Install
 
