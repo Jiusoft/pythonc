@@ -59,9 +59,9 @@ execute_python() {\n""")
                 f.write("    echo 'Downloading PIP Requirements...'\n")
                 with open(reqfile) as file:
                     reqitems = file.read().split("\n")
-            for item in reqitems:
-                f.write(f"    python3 -m pip install {item}\n")
-            f.write("    echo 'Finished Downloading PIP Requirements.'\n")
+                for item in reqitems:
+                    f.write(f"    python3 -m pip install {item}\n")
+                f.write("    echo 'Finished Downloading PIP Requirements.'\n")
             f.write("    python3 -c '__file__="'"$(pwd)/$0"'"\n")
             for idx, line in enumerate(code):
                 if all(i in line for i in ('import', 'sys')):
